@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sendInactivityReminderEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 // يُستدعى دوريًا (مرة أسبوعيًا مثلًا) عبر خدمة Cron خارجية مجانية (مثل cron-job.org)
 // محمي بمفتاح سري بسيط عبر رابط الاستدعاء لمنع أي حد يشغّله عشوائيًا
 export async function GET(request: Request) {

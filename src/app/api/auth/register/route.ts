@@ -6,6 +6,9 @@ import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 import { sendVerificationCodeEmail } from '@/lib/email';
 import { grantAchievement } from '@/lib/achievements';
 
+export const dynamic = 'force-dynamic';
+
+
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }

@@ -5,6 +5,9 @@ import crypto from 'crypto';
 import { logAdminAction } from '@/lib/auditLog';
 import { sendEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 function generateAccessCode() {
   return `ARK-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 }

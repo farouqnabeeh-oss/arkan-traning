@@ -3,6 +3,9 @@ import { db } from '@/lib/db';
 import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 import { sendEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   const clientKey = getClientKey(request);
   if (isRateLimited(`contact:${clientKey}`, 3, 10 * 60 * 1000)) {

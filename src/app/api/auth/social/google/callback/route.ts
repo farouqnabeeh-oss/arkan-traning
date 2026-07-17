@@ -4,6 +4,9 @@ import { createSession } from '@/lib/auth';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');

@@ -4,6 +4,9 @@ import { join, extname } from 'path';
 import { getSessionUser } from '@/lib/auth';
 import { randomUUID } from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 

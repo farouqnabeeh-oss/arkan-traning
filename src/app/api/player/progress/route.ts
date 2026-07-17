@@ -5,6 +5,9 @@ import { db } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
 import crypto from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   try {
     const user = await getSessionUser();

@@ -3,6 +3,9 @@ import { db } from '@/lib/db';
 import { sendVerificationCodeEmail } from '@/lib/email';
 import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 
+export const dynamic = 'force-dynamic';
+
+
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6 أرقام
 }

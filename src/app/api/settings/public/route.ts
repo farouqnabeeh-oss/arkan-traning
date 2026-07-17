@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
+
 const DEFAULT_BANK_ACCOUNTS = [
   { id: 'jawwal-pay', label: 'جوال باي', value: '0567777296', isActive: true },
   { id: 'bank-of-palestine', label: 'بال باي', value: '0567777296', isActive: true },

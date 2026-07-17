@@ -3,6 +3,9 @@ import { db } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET() {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });

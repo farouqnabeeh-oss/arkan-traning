@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
+
 async function requireAdminOrInstructor() {
   const user = await getSessionUser();
   if (!user || (user.role !== 'ADMIN' && user.role !== 'INSTRUCTOR')) return null;

@@ -3,6 +3,9 @@ import { db } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
 import { grantAchievement, checkProgressAchievements } from '@/lib/achievements';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request, { params }: { params: { courseId: string; questionId: string } }) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: 'يرجى تسجيل الدخول للإجابة.' }, { status: 401 });

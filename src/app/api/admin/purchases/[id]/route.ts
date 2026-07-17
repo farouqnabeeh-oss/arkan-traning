@@ -5,6 +5,9 @@ import { logAdminAction } from '@/lib/auditLog';
 import { sendBookPurchaseDecisionEmail } from '@/lib/email';
 import { grantAchievement } from '@/lib/achievements';
 
+export const dynamic = 'force-dynamic';
+
+
 // الموافقة/الرفض على طلب شراء كتاب، مع إمكانية تطبيق خصم
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   const admin = await getSessionUser();

@@ -4,6 +4,9 @@ import { db } from '@/lib/db';
 import { comparePassword, createSession } from '@/lib/auth';
 import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 
+export const dynamic = 'force-dynamic';
+
+
 const loginSchema = z.object({
   email: z.string().email('البريد الإلكتروني غير صالح'),
   password: z.string().min(1, 'كلمة المرور مطلوبة'),

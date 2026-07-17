@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { logAdminAction } from "@/lib/auditLog";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function PATCH(
   request: Request,
   { params }: { params: { id: string } },

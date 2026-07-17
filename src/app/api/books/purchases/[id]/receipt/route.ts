@@ -3,6 +3,9 @@ import { db } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });

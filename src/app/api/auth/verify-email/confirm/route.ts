@@ -4,6 +4,9 @@ import { createSession } from '@/lib/auth';
 import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 import { sendWelcomeEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   const { email, code, fingerprint = 'unknown-device' } = await request.json();
   if (!email || !code) return NextResponse.json({ error: 'يرجى إدخال الرمز.' }, { status: 400 });

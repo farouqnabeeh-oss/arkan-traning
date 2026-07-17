@@ -4,6 +4,9 @@ import crypto from 'crypto';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { isRateLimited, getClientKey } from '@/lib/rateLimit';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   try {
     const clientKey = getClientKey(request);

@@ -5,6 +5,9 @@ import crypto from 'crypto';
 import { sendCertificateReadyEmail } from '@/lib/email';
 import { checkLearningAchievements, checkProgressAchievements } from '@/lib/achievements';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   try {
     const user = await getSessionUser();

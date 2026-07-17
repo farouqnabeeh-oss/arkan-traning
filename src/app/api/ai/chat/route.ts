@@ -4,6 +4,9 @@ import { getSessionUser } from '@/lib/auth';
 import { queryRAG, askGemini } from '@/lib/ai';
 import { isRateLimited } from '@/lib/rateLimit';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: Request) {
   try {
     const user = await getSessionUser();

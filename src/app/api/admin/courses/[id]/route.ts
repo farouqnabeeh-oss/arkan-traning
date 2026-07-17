@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { logAdminAction } from "@/lib/auditLog";
 
+export const dynamic = 'force-dynamic';
+
+
 async function requireAdminOrInstructor() {
   const user = await getSessionUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR"))
