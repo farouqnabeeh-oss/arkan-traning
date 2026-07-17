@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSessionUser, hashPassword, comparePassword } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(request: Request) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: 'يرجى تسجيل الدخول.' }, { status: 401 });
