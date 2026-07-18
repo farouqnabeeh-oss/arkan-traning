@@ -59,7 +59,7 @@ export default async function BookDetailPage({ params }: { params: { slug: strin
               <div className="h-64 rounded-3xl bg-royal-linear flex items-center justify-center overflow-hidden">
                 {book.coverImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover" />
+                  <img src={book.coverImage} alt={book.title} className="w-full h-full object-contain bg-brand-navy/60" />
                 ) : (
                   <FileText className="w-16 h-16 text-white/40" />
                 )}

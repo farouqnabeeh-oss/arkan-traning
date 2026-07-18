@@ -24,11 +24,16 @@ export default function ImageUpload({ value, onChange, label = 'صورة الغ�
       const fd = new FormData();
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('استجابة غير متوقعة من الخادم. حاول مرة أخرى.');
+      }
       if (!res.ok) throw new Error(data.error || 'فشل الرفع');
       onChange(data.url);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'حدث خطأ أثناء رفع الصورة.');
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = '';
@@ -127,7 +132,7 @@ export default function ImageUpload({ value, onChange, label = 'صورة الغ�
           />
           {value && (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={value} alt="معاينة" className="w-full h-32 object-cover rounded-xl" onError={(e) => (e.currentTarget.style.display = 'none')} />
+            <img src={value} alt="معاينة" className="w-full h-32 object-contain bg-black/40 rounded-xl" onError={(e) => (e.currentTarget.style.display = 'none')} />
           )}
         </div>
       )}

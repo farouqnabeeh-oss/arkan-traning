@@ -82,7 +82,7 @@ export default function CoursesGrid({ courses }: { courses: CourseCard[] }) {
                 <div className="h-40 bg-royal-linear relative overflow-hidden flex items-center justify-center">
                   {c.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.image} alt={c.title} className="w-full h-full object-cover" />
+                    <img src={c.image} alt={c.title} className="w-full h-full object-contain bg-brand-navy/60" />
                   ) : (
                     <BookOpen className="w-10 h-10 text-white/40" />
                   )}

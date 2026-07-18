@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); Promise.all([prisma.course.updateMany({data: {isPublished: true}}), prisma.book.updateMany({data: {isPublished: true}})]).then(() => console.log('All published')).catch(console.error).finally(() => prisma.$disconnect());

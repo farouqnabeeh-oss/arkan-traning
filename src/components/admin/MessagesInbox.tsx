@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Loader2, Mail, MailOpen, Trash2, MessageSquare } from 'lucide-react';
 
 interface Message {
-  id: string; name: string; email: string; subject: string; message: string;
+  id: string; name: string; email: string; phone?: string; subject: string; message: string;
   isRead: boolean; createdAt: string;
 }
 
@@ -14,10 +14,19 @@ export default function MessagesInbox() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/admin/messages').then((r) => r.json()).then((d) => {
-      setMessages(d.messages || []);
-      setLoading(false);
-    });
+    fetch('/api/admin/messages', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.error) {
+          console.error('API Error:', d.error);
+        }
+        setMessages(d.messages || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Fetch Error:', err);
+        setLoading(false);
+      });
   }, []);
 
   async function toggleRead(id: string, isRead: boolean) {
@@ -55,7 +64,7 @@ export default function MessagesInbox() {
                 {m.isRead ? <MailOpen size={14} className="text-brand-silver-dim shrink-0" /> : <Mail size={14} className="text-brand-royal-light shrink-0" />}
                 <p className={`text-sm font-bold truncate ${m.isRead ? 'text-brand-silver' : 'text-brand-white'}`}>{m.subject}</p>
               </div>
-              <p className="text-xs text-brand-silver-dim mt-1">{m.name} — {m.email}</p>
+              <p className="text-xs text-brand-silver-dim mt-1">{m.name} — {m.email} {m.phone ? ` — ${m.phone}` : ''}</p>
             </div>
             <span className="text-xs text-brand-silver-dim shrink-0">{new Date(m.createdAt).toLocaleDateString('ar-EG')}</span>
           </div>

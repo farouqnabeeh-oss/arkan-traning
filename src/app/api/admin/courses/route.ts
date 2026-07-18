@@ -61,17 +61,19 @@ export async function POST(request: Request) {
     modules,
   } = body;
 
-  if (!title || !slug || !description || price === undefined) {
+  if (!title || !description || price === undefined) {
     return NextResponse.json(
       { error: "يرجى إدخال جميع الحقول الأساسية المطلوبة." },
       { status: 400 },
     );
   }
 
-  const cleanSlug = String(slug)
+  const generatedSlug = slug ? String(slug)
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9-]/g, "-");
+    .replace(/[^a-z0-9-]/g, "-") : `course-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+
+  const cleanSlug = generatedSlug || `course-${Date.now()}`;
 
   const existing = await db.course.findUnique({ where: { slug: cleanSlug } });
   if (existing) {

@@ -14,7 +14,7 @@ interface BankAccount { id: string; label: string; value: string; isActive: bool
 const SUBJECTS = ['استفسار عام', 'استفسار عن دورة', 'مشكلة تقنية', 'شراكة أو تعاون', 'أخرى'];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: 'استفسار عام', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: 'استفسار عام', message: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +74,7 @@ export default function ContactPage() {
         return;
       }
       setSubmitted(true);
-      setForm({ name: '', email: '', subject: 'استفسار عام', message: '' });
+      setForm({ name: '', email: '', phone: '', subject: 'استفسار عام', message: '' });
       setTouched({});
     } catch {
       setServerError('تعذر الاتصال بالخادم، حاول مرة أخرى.');
@@ -156,6 +156,16 @@ export default function ContactPage() {
                           {touched.name && errors.name && <p className="text-red-400 text-xs font-tajawal">{errors.name}</p>}
                         </div>
                         <div className="space-y-2">
+                          <label className="text-brand-white/70 font-tajawal text-sm font-bold">رقم الجوال (اختياري)</label>
+                          <input
+                            type="tel"
+                            value={form.phone || ''}
+                            onChange={(e) => handleChange('phone', e.target.value)}
+                            className="input-premium w-full font-tajawal"
+                            dir="ltr"
+                          />
+                        </div>
+                        <div className="space-y-2 md:col-span-2">
                           <label className="text-brand-white/70 font-tajawal text-sm font-bold">البريد الإلكتروني *</label>
                           <input
                             type="email"

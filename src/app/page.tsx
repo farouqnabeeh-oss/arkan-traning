@@ -5,12 +5,7 @@ import Footer from "@/components/Footer";
 import CounterStats from "@/components/CounterStats";
 import FaqAccordion from "@/components/FaqAccordion";
 import { db } from "@/lib/db";
-import {
-  fallbackFaqs,
-  fallbackFeaturedCourses,
-  fallbackHomeStats,
-  fallbackTracks,
-} from "@/lib/fallbackData";
+
 import {
   BookOpen,
   Trophy,
@@ -41,6 +36,7 @@ async function getHomeData() {
       certificatesCount,
       publishedCourses,
       reviews,
+      books,
     ] = await Promise.all([
       db.user.count({ where: { role: "STUDENT" } }),
       db.course.count({ where: { isPublished: true } }),
@@ -51,12 +47,18 @@ async function getHomeData() {
         orderBy: { createdAt: "desc" },
       }),
       db.review.findMany({
-        orderBy: { rating: "desc" },
+        orderBy: { rating: 'desc' },
         take: 3,
         include: {
           user: { select: { name: true } },
           course: { select: { title: true } },
         },
+      }),
+      db.book.findMany({
+        where: { isPublished: true },
+        include: { _count: { select: { purchases: true } } },
+        orderBy: { createdAt: 'desc' },
+        take: 4,
       }),
     ]);
 
@@ -70,6 +72,10 @@ async function getHomeData() {
     const featuredCourses = [...publishedCourses]
       .sort((a, b) => b._count.enrollments - a._count.enrollments)
       .slice(0, 3);
+    
+    const topBooks = [...(books || [])]
+      .sort((a, b) => b._count.purchases - a._count.purchases)
+      .slice(0, 4);
 
     const tracksMap = new Map<string, typeof publishedCourses>();
     publishedCourses.forEach((c) => {
@@ -90,16 +96,18 @@ async function getHomeData() {
       reviews,
       avgRating,
       tracks,
+      topBooks,
     };
   } catch {
     return {
-      studentsCount: fallbackHomeStats.studentsCount,
-      coursesCount: fallbackHomeStats.coursesCount,
-      certificatesCount: fallbackHomeStats.certificatesCount,
-      featuredCourses: fallbackFeaturedCourses,
+      studentsCount: 0,
+      coursesCount: 0,
+      certificatesCount: 0,
+      featuredCourses: [],
       reviews: [],
-      avgRating: fallbackHomeStats.avgRating,
-      tracks: fallbackTracks,
+      avgRating: null,
+      tracks: [],
+      topBooks: [],
     };
   }
 }
@@ -114,7 +122,7 @@ async function getFaqs() {
   } catch {
     /* fallback */
   }
-  return fallbackFaqs;
+  return [];
 }
 
 export default async function HomePage() {
@@ -126,6 +134,7 @@ export default async function HomePage() {
     reviews,
     avgRating,
     tracks,
+    topBooks,
   } = await getHomeData();
   const faqs = await getFaqs();
 
@@ -631,6 +640,57 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+
+      {/* ═══ أهم الكتب ═══ */}
+      {topBooks.length > 0 && (
+        <section className="py-24 relative bg-brand-navy/20">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+              <span className="text-brand-royal-light font-tajawal font-bold text-sm">مكتبة رقمية</span>
+              <h2 className="text-3xl md:text-5xl font-tajawal font-black text-brand-white">
+                أبرز <span className="text-brand-royal-light">الكتب</span>
+              </h2>
+              <p className="text-brand-white/50 font-tajawal text-sm max-w-lg mx-auto">كتب PDF متخصصة تدعم مسيرتك التعليمية</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {topBooks.map((book) => (
+                <Link
+                  key={book.id}
+                  href="/library"
+                  className="group glass-dark rounded-3xl border border-brand-royal/20 hover:border-brand-royal/40 overflow-hidden hover:shadow-royal-glow hover:-translate-y-2 transition-all duration-500 flex flex-col"
+                >
+                  <div className="h-36 bg-[linear-gradient(135deg,rgba(31,46,99,0.5),rgba(7,11,20,0.8))] flex items-center justify-center border-b border-brand-royal/10 relative overflow-hidden">
+                    {book.coverImage ? (
+                      <img src={book.coverImage} alt={book.title} className="w-full h-full object-contain bg-brand-navy/60" />
+                    ) : (
+                      <Library className="w-10 h-10 text-brand-royal-light/40 group-hover:scale-110 transition-transform" />
+                    )}
+                    {book.price === 0 && (
+                      <span className="absolute top-3 right-3 text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded-full font-tajawal font-bold">مجاني</span>
+                    )}
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="font-bold text-brand-white text-sm mb-1 line-clamp-2 group-hover:text-brand-royal-light transition-colors">{book.title}</h3>
+                    <p className="text-xs text-brand-silver-dim mb-3">{book.author}</p>
+                    <div className="mt-auto flex items-center justify-between">
+                      <span className="text-brand-royal-light font-black text-sm">{book.price > 0 ? `${book.price} ₪` : 'مجاني'}</span>
+                      <span className="text-[10px] text-brand-silver-dim flex items-center gap-1">
+                        <Users size={10} />{book._count.purchases} طالب
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <Link href="/library" className="inline-flex items-center gap-2 border border-brand-royal/30 text-brand-royal-light px-6 py-3 rounded-xl font-tajawal font-bold hover:bg-brand-royal/10 transition-colors">
+                <Library size={16} /> عرض كل الكتب <ChevronLeft className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══ آراء الطلاب ═══ */}
       <section className="py-24 relative">

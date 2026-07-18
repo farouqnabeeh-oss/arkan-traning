@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'عدد كبير من المحاولات، يرجى المحاولة لاحقًا بعد قليل.' }, { status: 429 });
   }
 
-  const { name, email, subject, message } = await request.json();
+  const { name, email, phone, subject, message } = await request.json();
 
   const errors: Record<string, string> = {};
   if (!name || name.trim().length < 2) errors.name = 'يرجى إدخال اسم صحيح (حرفين على الأقل).';
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   }
 
   const saved = await db.contactMessage.create({
-    data: { name: name.trim(), email: email.trim(), subject: subject.trim(), message: message.trim() },
+    data: { name: name.trim(), email: email.trim(), phone: phone?.trim(), subject: subject.trim(), message: message.trim() },
   });
 
   // Forward to farugn9@gmail.com
@@ -43,6 +43,10 @@ export async function POST(request: Request) {
           <tr>
             <td style="padding: 8px 0; color: rgba(242,245,250,0.5);"><strong>البريد الإلكتروني:</strong></td>
             <td style="padding: 8px 0; color: #F2F5FA;"><a href="mailto:${email.trim()}" style="color: #7C93F0; text-decoration: none;">${email.trim()}</a></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: rgba(242,245,250,0.5);"><strong>رقم الجوال:</strong></td>
+            <td style="padding: 8px 0; color: #F2F5FA;" dir="ltr" style="text-align: right;">${phone?.trim() || 'لم يتم إدخاله'}</td>
           </tr>
           <tr>
             <td style="padding: 8px 0; color: rgba(242,245,250,0.5);"><strong>الموضوع:</strong></td>

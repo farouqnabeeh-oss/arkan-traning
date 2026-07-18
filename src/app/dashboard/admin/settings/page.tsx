@@ -9,7 +9,14 @@ import {
   CheckCircle2,
   Landmark,
   Mail,
+  Share2,
 } from "lucide-react";
+
+interface SocialLink {
+  label: string;
+  url: string;
+  icon: string;
+}
 
 interface BankAccount {
   id: string;
@@ -37,6 +44,7 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     email: "",
     phone: "",
@@ -49,6 +57,7 @@ export default function AdminSettingsPage() {
       .then((r) => r.json())
       .then((data) => {
         setBankAccounts(data.bankAccounts || []);
+        setSocialLinks(data.socialLinks || []);
         setContactInfo(
           data.contactInfo || {
             email: "",
@@ -84,7 +93,7 @@ export default function AdminSettingsPage() {
     await fetch("/api/admin/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bankAccounts, contactInfo }),
+      body: JSON.stringify({ bankAccounts, contactInfo, socialLinks }),
     });
     setSaving(false);
     setSaved(true);
@@ -239,6 +248,69 @@ export default function AdminSettingsPage() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Social Links */}
+      <div className="card-premium bg-brand-navy/60 glass-dark p-6 rounded-2xl border border-white/5">
+        <h2 className="font-bold text-brand-white mb-1 flex items-center gap-2">
+          <Share2 size={18} className="text-brand-royal-light" /> روابط التواصل الاجتماعي
+        </h2>
+        <p className="text-xs text-brand-silver-dim mb-5">
+          تظهر هذه الروابط في الفوتر. أضف أيقونة الشبكة كرابط صورة PNG/SVG شفاف (اختياري).
+        </p>
+        <div className="space-y-3">
+          {socialLinks.map((link, idx) => (
+            <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/5">
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-xs text-brand-silver-dim block mb-1">اسم المنصة</label>
+                  <input
+                    value={link.label}
+                    onChange={e => setSocialLinks(prev => prev.map((l, i) => i === idx ? { ...l, label: e.target.value } : l))}
+                    placeholder="مثال: Instagram"
+                    className="input-premium w-full text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-brand-silver-dim block mb-1">الرابط</label>
+                  <input
+                    value={link.url}
+                    onChange={e => setSocialLinks(prev => prev.map((l, i) => i === idx ? { ...l, url: e.target.value } : l))}
+                    placeholder="https://instagram.com/..."
+                    className="input-premium w-full text-sm font-mono"
+                    dir="ltr"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-brand-silver-dim block mb-1">رابط الأيقونة (PNG/SVG)</label>
+                  <input
+                    value={link.icon}
+                    onChange={e => setSocialLinks(prev => prev.map((l, i) => i === idx ? { ...l, icon: e.target.value } : l))}
+                    placeholder="https://...icon.svg"
+                    className="input-premium w-full text-sm font-mono"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between mt-3">
+                {link.icon && <img src={link.icon} alt={link.label} className="w-6 h-6 object-contain opacity-70" />}
+                <div className="flex-1" />
+                <button
+                  onClick={() => setSocialLinks(prev => prev.filter((_, i) => i !== idx))}
+                  className="text-red-400/70 hover:text-red-400 transition-colors p-1"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => setSocialLinks(prev => [...prev, { label: '', url: '', icon: '' }])}
+          className="mt-4 flex items-center gap-2 text-sm text-brand-royal-light hover:text-brand-royal transition-colors"
+        >
+          <Plus size={16} /> إضافة منصة جديدة
+        </button>
       </div>
 
       <button

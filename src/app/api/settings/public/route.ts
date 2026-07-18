@@ -20,20 +20,23 @@ const DEFAULT_CONTACT_INFO = {
 export async function GET() {
   try {
     const rows = await db.siteSetting.findMany({
-      where: { key: { in: ['bank_accounts', 'contact_info'] } },
+      where: { key: { in: ['bank_accounts', 'contact_info', 'social_links'] } },
     });
 
     const bankAccountsRow = rows.find((r) => r.key === 'bank_accounts');
     const contactInfoRow = rows.find((r) => r.key === 'contact_info');
+    const socialLinksRow = rows.find((r) => r.key === 'social_links');
 
     const bankAccounts = bankAccountsRow ? JSON.parse(bankAccountsRow.value) : DEFAULT_BANK_ACCOUNTS;
     const contactInfo = contactInfoRow ? JSON.parse(contactInfoRow.value) : DEFAULT_CONTACT_INFO;
+    const socialLinks = socialLinksRow ? JSON.parse(socialLinksRow.value) : [];
 
     return NextResponse.json({
       bankAccounts: bankAccounts.filter((a: any) => a.isActive),
       contactInfo,
+      socialLinks,
     });
   } catch {
-    return NextResponse.json({ bankAccounts: DEFAULT_BANK_ACCOUNTS.filter(a => a.isActive), contactInfo: DEFAULT_CONTACT_INFO });
+    return NextResponse.json({ bankAccounts: DEFAULT_BANK_ACCOUNTS.filter(a => a.isActive), contactInfo: DEFAULT_CONTACT_INFO, socialLinks: [] });
   }
 }

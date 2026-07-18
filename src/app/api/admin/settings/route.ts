@@ -31,16 +31,18 @@ export async function GET() {
   }
 
   const rows = await db.siteSetting.findMany({
-    where: { key: { in: ['bank_accounts', 'contact_info'] } },
+    where: { key: { in: ['bank_accounts', 'contact_info', 'social_links'] } },
   });
 
   const bankAccountsRow = rows.find((r) => r.key === 'bank_accounts');
   const contactInfoRow = rows.find((r) => r.key === 'contact_info');
+  const socialLinksRow = rows.find((r) => r.key === 'social_links');
 
   const bankAccounts = bankAccountsRow ? JSON.parse(bankAccountsRow.value) : DEFAULT_BANK_ACCOUNTS;
   const contactInfo = contactInfoRow ? JSON.parse(contactInfoRow.value) : DEFAULT_CONTACT_INFO;
+  const socialLinks = socialLinksRow ? JSON.parse(socialLinksRow.value) : [];
 
-  return NextResponse.json({ bankAccounts, contactInfo });
+  return NextResponse.json({ bankAccounts, contactInfo, socialLinks });
 }
 
 export async function PUT(request: Request) {
@@ -49,7 +51,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'غير مصرح لك بالوصول لهذه الصفحة.' }, { status: 401 });
   }
 
-  const { bankAccounts, contactInfo } = await request.json();
+  const { bankAccounts, contactInfo, socialLinks } = await request.json();
 
   if (bankAccounts) {
     await db.siteSetting.upsert({
@@ -64,6 +66,14 @@ export async function PUT(request: Request) {
       where: { key: 'contact_info' },
       update: { value: JSON.stringify(contactInfo) },
       create: { key: 'contact_info', value: JSON.stringify(contactInfo) },
+    });
+  }
+
+  if (socialLinks) {
+    await db.siteSetting.upsert({
+      where: { key: 'social_links' },
+      update: { value: JSON.stringify(socialLinks) },
+      create: { key: 'social_links', value: JSON.stringify(socialLinks) },
     });
   }
 

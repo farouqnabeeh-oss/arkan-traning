@@ -17,6 +17,7 @@ import {
   AlignLeft,
   Palette,
   Stamp,
+  Image as ImageIcon,
 } from "lucide-react";
 import CertificateRenderer, {
   CertElement,
@@ -95,10 +96,12 @@ export default function CertificateTemplateBuilder({
       type,
       content: type === "text" ? "نص جديد" : undefined,
       variable: type === "variable" ? variable : undefined,
+      imageUrl: type === "image" ? "" : undefined,
       x: 30,
       y: 45,
-      width: 40,
-      fontSize: type === "divider" ? 0 : 18,
+      width: type === "image" ? 15 : 40,
+      height: type === "image" ? 15 : undefined,
+      fontSize: type === "divider" || type === "image" ? 0 : 18,
       color: "#F2F5FA",
       fontWeight: "normal",
       textAlign: "center",
@@ -236,6 +239,12 @@ export default function CertificateTemplateBuilder({
             >
               <Minus size={14} /> خط فاصل
             </button>
+            <button
+              onClick={() => addElement("image")}
+              className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-brand-silver"
+            >
+              <ImageIcon size={14} /> إضافة صورة (شعار/ختم)
+            </button>
           </div>
 
           <div
@@ -266,7 +275,8 @@ export default function CertificateTemplateBuilder({
                   left: `${el.x}%`,
                   top: `${el.y}%`,
                   width: `${el.width}%`,
-                  minHeight: el.type === "divider" ? 4 : 24,
+                  height: el.type === "image" && el.height ? `${el.height}%` : undefined,
+                  minHeight: el.type === "divider" ? 4 : el.type === "image" ? 20 : 24,
                 }}
               />
             ))}
@@ -310,7 +320,9 @@ export default function CertificateTemplateBuilder({
                   ? VARIABLE_LABELS[selected.variable || ""]
                   : selected.type === "divider"
                     ? "خط فاصل"
-                    : "نص ثابت"}
+                    : selected.type === "image"
+                      ? "صورة (لوجو/ختم)"
+                      : "نص ثابت"}
               </p>
 
               {selected.type === "text" && (
@@ -322,7 +334,32 @@ export default function CertificateTemplateBuilder({
                 />
               )}
 
-              {selected.type !== "divider" && (
+              {selected.type === "image" && (
+                <div className="space-y-2">
+                  <ImageUpload
+                    value={selected.imageUrl || ""}
+                    onChange={(url) => updateSelected({ imageUrl: url })}
+                    label="صورة العنصر"
+                  />
+                  <div>
+                    <label className="text-xs text-brand-silver-dim block mb-1">
+                      ارتفاع الصورة (% من الشهادة): {selected.height || 15}%
+                    </label>
+                    <input
+                      type="range"
+                      min={2}
+                      max={80}
+                      value={selected.height || 15}
+                      onChange={(e) =>
+                        updateSelected({ height: parseInt(e.target.value) })
+                      }
+                      className="w-full accent-brand-royal"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {selected.type !== "divider" && selected.type !== "image" && (
                 <>
                   <div>
                     <label className="text-xs text-brand-silver-dim block mb-1">
@@ -373,17 +410,19 @@ export default function CertificateTemplateBuilder({
                 </>
               )}
 
-              <div>
-                <label className="text-xs text-brand-silver-dim block mb-1">
-                  اللون
-                </label>
-                <input
-                  type="color"
-                  value={selected.color}
-                  onChange={(e) => updateSelected({ color: e.target.value })}
-                  className="w-full h-9 rounded-lg cursor-pointer bg-transparent"
-                />
-              </div>
+              {selected.type !== "divider" && selected.type !== "image" && (
+                <div>
+                  <label className="text-xs text-brand-silver-dim block mb-1">
+                    اللون
+                  </label>
+                  <input
+                    type="color"
+                    value={selected.color}
+                    onChange={(e) => updateSelected({ color: e.target.value })}
+                    className="w-full h-9 rounded-lg cursor-pointer bg-transparent"
+                  />
+                </div>
+              )}
 
               <button
                 onClick={removeSelected}

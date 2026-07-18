@@ -5,14 +5,13 @@ import crypto from "crypto";
 
 export const dynamic = 'force-dynamic';
 
-
 export async function POST(request: Request) {
   try {
     // 1. Authenticate and check role
     const user = await getSessionUser();
-    if (!user || user.role !== "INSTRUCTOR") {
+    if (!user || (user.role !== "INSTRUCTOR" && user.role !== "ADMIN")) {
       return NextResponse.json(
-        { error: "غير مصرح لك بالوصول. هذا الإجراء متاح للمدربين فقط." },
+        { error: "غير مصرح لك بالوصول. هذا الإجراء متاح للمدربين والمدراء فقط." },
         { status: 403 },
       );
     }

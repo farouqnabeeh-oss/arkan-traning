@@ -34,7 +34,8 @@ export async function POST(request: Request) {
 
     await db.passwordResetToken.create({ data: { email: user.email, token, expiresAt } });
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || request.headers.get('origin') || `https://${request.headers.get('host')}` || 'http://localhost:3000';
+    const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
     const result = await sendPasswordResetEmail(user.email, user.name, resetUrl);
     if (!result.success) {

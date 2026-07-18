@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 async function requireAdmin() {
   const user = await getSessionUser();
-  if (!user || user.role !== "ADMIN") return null;
+  if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) return null;
   return user;
 }
 
@@ -42,17 +42,20 @@ export async function POST(request: Request) {
     bundlePrice,
   } = await request.json();
 
-  if (!title || !slug || !description || price === undefined || !pdfFileKey) {
+  if (!title || price === undefined || !pdfFileKey) {
     return NextResponse.json(
-      { error: "يرجى تعبئة العنوان والوصف والسعر ورابط ملف الـ PDF." },
+      { error: "يرجى تعبئة العنوان والسعر ورابط ملف الـ PDF." },
       { status: 400 },
     );
   }
 
-  const cleanSlug = String(slug)
+  const generatedSlug = slug ? String(slug)
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9-]/g, "-");
+    .replace(/[^a-z0-9-]/g, "-") : `book-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+  
+  const cleanSlug = generatedSlug || `book-${Date.now()}`;
+
   const existing = await db.book.findUnique({ where: { slug: cleanSlug } });
   if (existing)
     return NextResponse.json(

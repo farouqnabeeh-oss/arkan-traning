@@ -85,7 +85,6 @@ export default function BookBuilder({
     setError("");
     if (
       !form.title ||
-      !form.slug ||
       !form.description ||
       !form.price ||
       !form.pdfFileKey
@@ -129,25 +128,11 @@ export default function BookBuilder({
             value={form.title}
             onChange={(e) => {
               update("title", e.target.value);
-              if (!slugTouched) update("slug", slugify(e.target.value));
             }}
             className="input-premium w-full"
           />
         </div>
-        <div>
-          <label className="text-sm text-brand-silver block mb-1.5">
-            الرابط (Slug) *
-          </label>
-          <input
-            value={form.slug}
-            onChange={(e) => {
-              setSlugTouched(true);
-              update("slug", slugify(e.target.value));
-            }}
-            className="input-premium w-full font-mono text-sm"
-            dir="ltr"
-          />
-        </div>
+
         <div>
           <label className="text-sm text-brand-silver block mb-1.5">
             المؤلف

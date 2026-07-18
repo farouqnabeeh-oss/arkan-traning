@@ -103,7 +103,6 @@ export default function CourseBuilder({
 
   function handleTitleChange(value: string) {
     update('title', value);
-    if (!slugTouched) update('slug', slugify(value));
   }
 
   // ─── قوائم نصية (ماذا ستتعلم / المتطلبات / الفئة المستهدفة) ───
@@ -159,7 +158,7 @@ export default function CourseBuilder({
 
   async function handleSubmit(publishNow?: boolean) {
     setError('');
-    if (!form.title || !form.slug || !form.description || !form.price) {
+    if (!form.title || !form.description || !form.price) {
       setError('يرجى تعبئة العنوان والوصف والسعر على الأقل (تبويب "معلومات أساسية").');
       setTab('basic');
       return;
@@ -238,18 +237,7 @@ export default function CourseBuilder({
               className="input-premium w-full"
             />
           </div>
-          <div>
-            <label className="text-sm text-brand-silver block mb-1.5">
-              الرابط (Slug) *
-              <span className="text-xs text-brand-silver-dim mr-2">(يظهر بالرابط: arkan.com/courses/...)</span>
-            </label>
-            <input
-              value={form.slug}
-              onChange={(e) => { setSlugTouched(true); update('slug', slugify(e.target.value)); }}
-              className="input-premium w-full font-mono text-sm"
-              dir="ltr"
-            />
-          </div>
+
           <div>
             <label className="text-sm text-brand-silver block mb-1.5">وصف قصير (يظهر بكارت الدورة)</label>
             <input

@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth';
 import Logo from '@/components/Logo';
+import LogoutButton from '@/components/LogoutButton';
 import {
   LayoutDashboard, BookOpen, Users, Settings, Library,
-  Gamepad2, MessageSquare, LogOut, ExternalLink, History, BarChart3, Award, Ticket,
+  Gamepad2, MessageSquare, ExternalLink, History, BarChart3, Award, Ticket,
 } from 'lucide-react';
 
 const navItems = [
@@ -61,15 +62,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <ExternalLink size={18} />
             <span className="text-sm">عرض الموقع</span>
           </Link>
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-all"
-            >
-              <LogOut size={18} />
-              <span className="text-sm">تسجيل الخروج</span>
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </aside>
 

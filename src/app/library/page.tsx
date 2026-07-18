@@ -61,7 +61,7 @@ export default async function LibraryPage() {
                     <img
                       src={book.coverImage}
                       alt={book.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain bg-brand-navy/60 group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <FileText className="w-12 h-12 text-white/40" />

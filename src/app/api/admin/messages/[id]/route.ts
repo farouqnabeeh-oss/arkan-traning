@@ -11,7 +11,7 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ) {
   const admin = await getSessionUser();
-  if (!admin || admin.role !== "ADMIN")
+  if (!admin || (admin.role !== "ADMIN" && admin.role !== "INSTRUCTOR"))
     return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const { isRead } = await request.json();
@@ -34,7 +34,7 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   const admin = await getSessionUser();
-  if (!admin || admin.role !== "ADMIN")
+  if (!admin || (admin.role !== "ADMIN" && admin.role !== "INSTRUCTOR"))
     return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const message = await db.contactMessage.findUnique({

@@ -4,13 +4,16 @@ import { getSessionUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-
 export async function GET() {
-  const admin = await getSessionUser();
-  if (!admin || (admin.role !== 'ADMIN' && admin.role !== 'INSTRUCTOR')) {
+  const user = await getSessionUser();
+  if (!user || user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
   }
 
-  const messages = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
-  return NextResponse.json({ messages });
+  const logs = await db.adminAuditLog.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 100,
+  });
+
+  return NextResponse.json({ logs });
 }
