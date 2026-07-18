@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join, extname } from 'path';
 import { getSessionUser } from '@/lib/auth';
-import { randomUUID } from 'crypto';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,14 +41,10 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const ext = extname(file.name) || '.jpg';
-    const filename = `${randomUUID()}${ext}`;
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
+    // Convert to Base64 Data URL — works on Vercel (read-only filesystem)
+    const base64Data = buffer.toString('base64');
+    const url = `data:${file.type};base64,${base64Data}`;
 
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(join(uploadDir, filename), buffer);
-
-    const url = `/uploads/${filename}`;
     return NextResponse.json({ url });
   } catch (err: any) {
     console.error('[UPLOAD ERROR]', err);
