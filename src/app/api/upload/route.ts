@@ -55,6 +55,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ url });
   } catch (err: any) {
     console.error('[UPLOAD ERROR]', err);
-    return NextResponse.json({ error: 'حدث خطأ أثناء رفع الصورة. حاول مرة أخرى.' }, { status: 500 });
+    return NextResponse.json({ error: `حدث خطأ أثناء رفع الصورة: ${err.message || 'حاول مرة أخرى'}` }, { status: 500 });
   }
 }

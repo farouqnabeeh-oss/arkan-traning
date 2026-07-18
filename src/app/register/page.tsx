@@ -332,27 +332,14 @@ function RegisterForm() {
             </div>
 
             {/* Social Buttons */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="flex justify-center">
               <Link
                 href="/api/auth/social/google"
-                className="flex items-center justify-center py-3 border border-white/10 hover:border-brand-royal/40 rounded-xl hover:bg-brand-royal/5 transition-all text-brand-white/70"
+                className="w-full flex items-center justify-center gap-3 py-3 border border-white/10 hover:border-brand-royal/40 rounded-xl hover:bg-brand-royal/5 transition-all text-brand-white/70 font-tajawal text-sm"
                 title="Google"
               >
                 <GoogleIcon className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/api/auth/social/facebook"
-                className="flex items-center justify-center py-3 border border-white/10 hover:border-brand-royal/40 rounded-xl hover:bg-brand-royal/5 transition-all text-brand-white/70"
-                title="Facebook"
-              >
-                <FacebookIcon className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/api/auth/social/linkedin"
-                className="flex items-center justify-center py-3 border border-white/10 hover:border-brand-royal/40 rounded-xl hover:bg-brand-royal/5 transition-all text-brand-white/70"
-                title="LinkedIn"
-              >
-                <LinkedinIcon className="w-5 h-5" />
+                <span>المتابعة باستخدام Google</span>
               </Link>
             </div>
           </div>

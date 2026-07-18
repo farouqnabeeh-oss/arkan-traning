@@ -52,15 +52,7 @@ export default function CertificateRenderer({
       <div className="absolute inset-4 border-2 rounded-xl pointer-events-none" style={{ borderColor: 'rgba(124,147,240,0.4)' }} />
       <div className="absolute inset-6 border pointer-events-none" style={{ borderColor: 'rgba(199,208,222,0.2)' }} />
 
-      {/* شعار أركان الافتراضي في الترويسة - نتركه أو نلغيه إذا أضاف الطالب شعاره الخاص، لكن نجعله كخلفية افتراضية */}
-      <div className="absolute top-0 left-0 right-0 flex items-center justify-center pt-6 pb-3 pointer-events-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo.jpeg"
-          alt="أركان"
-          style={{ height: 48, objectFit: 'contain', opacity: 0.9 }}
-        />
-      </div>
+      {/* شعار أركان الافتراضي في الترويسة - تم حذفه بناء على طلب المستخدم */}
 
       {/* الختم القديم (للتوافق الرجعي فقط إذا كان موجودًا) */}
       {sealImage && (

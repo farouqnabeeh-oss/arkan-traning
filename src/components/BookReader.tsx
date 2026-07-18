@@ -46,10 +46,15 @@ export default function BookReader({
     }).catch(() => {});
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+    window.open(pdfUrl, '_blank');
+  };
+
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         className="w-full py-3.5 glass-royal border border-brand-royal/30 text-brand-royal-light rounded-xl font-tajawal font-bold flex items-center justify-center gap-2 hover:bg-brand-royal/10 transition-colors"
       >
         <BookOpen size={18} /> اقرأ داخل المتصفح
@@ -63,25 +68,6 @@ export default function BookReader({
           <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
             <div className="h-full royal-gradient transition-all" style={{ width: `${progress}%` }} />
           </div>
-        </div>
-      )}
-
-      {open && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col">
-          <div className="flex items-center justify-between p-4 glass-dark border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-brand-white/60 font-tajawal">تقدمك: {progress}%</span>
-              {progress < 100 && (
-                <button onClick={markFinished} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 font-tajawal">
-                  <CheckCircle2 size={13} /> أنهيت القراءة
-                </button>
-              )}
-            </div>
-            <button onClick={() => setOpen(false)} className="text-brand-white/60 hover:text-brand-white">
-              <X size={22} />
-            </button>
-          </div>
-          <iframe src={pdfUrl} className="flex-1 w-full bg-white" title="قراءة الكتاب" />
         </div>
       )}
     </>
