@@ -6,6 +6,8 @@ import CounterStats from "@/components/CounterStats";
 import FaqAccordion from "@/components/FaqAccordion";
 import { db } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 import {
   BookOpen,
   Trophy,
@@ -25,6 +27,8 @@ import {
   QrCode,
   Rocket,
   Library,
+  FileText,
+  User2,
 } from "lucide-react";
 
 /* ─── جلب بيانات حقيقية من قاعدة البيانات ─────────────────────────────── */
@@ -58,7 +62,6 @@ async function getHomeData() {
         where: { isPublished: true },
         include: { _count: { select: { purchases: true } } },
         orderBy: { createdAt: 'desc' },
-        take: 4,
       }),
     ]);
 
@@ -75,7 +78,7 @@ async function getHomeData() {
     
     const topBooks = [...(books || [])]
       .sort((a, b) => b._count.purchases - a._count.purchases)
-      .slice(0, 4);
+      .slice(0, 6);
 
     const tracksMap = new Map<string, typeof publishedCourses>();
     publishedCourses.forEach((c) => {
@@ -653,30 +656,46 @@ export default async function HomePage() {
               </h2>
               <p className="text-brand-white/50 font-tajawal text-sm max-w-lg mx-auto">كتب PDF متخصصة تدعم مسيرتك التعليمية</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {topBooks.map((book) => (
                 <Link
                   key={book.id}
-                  href="/library"
-                  className="group glass-dark rounded-3xl border border-brand-royal/20 hover:border-brand-royal/40 overflow-hidden hover:shadow-royal-glow hover:-translate-y-2 transition-all duration-500 flex flex-col"
+                  href={`/library/${book.slug}`}
+                  className="card-premium bg-brand-navy/50 glass-dark rounded-2xl border border-white/5 hover:border-brand-royal/30 transition-all overflow-hidden group"
                 >
-                  <div className="h-36 bg-[linear-gradient(135deg,rgba(31,46,99,0.5),rgba(7,11,20,0.8))] flex items-center justify-center border-b border-brand-royal/10 relative overflow-hidden">
+                  <div className="h-52 bg-royal-linear relative overflow-hidden flex items-center justify-center">
                     {book.coverImage ? (
-                      <img src={book.coverImage} alt={book.title} className="w-full h-full object-contain bg-brand-navy/60" />
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={book.coverImage}
+                        alt={book.title}
+                        className="w-full h-full object-contain bg-brand-navy/60 group-hover:scale-105 transition-transform duration-500"
+                      />
                     ) : (
-                      <Library className="w-10 h-10 text-brand-royal-light/40 group-hover:scale-110 transition-transform" />
+                      <FileText className="w-12 h-12 text-white/40" />
                     )}
                     {book.price === 0 && (
                       <span className="absolute top-3 right-3 text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded-full font-tajawal font-bold">مجاني</span>
                     )}
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <h3 className="font-bold text-brand-white text-sm mb-1 line-clamp-2 group-hover:text-brand-royal-light transition-colors">{book.title}</h3>
-                    <p className="text-xs text-brand-silver-dim mb-3">{book.author}</p>
-                    <div className="mt-auto flex items-center justify-between">
-                      <span className="text-brand-royal-light font-black text-sm">{book.price > 0 ? `${book.price} ₪` : 'مجاني'}</span>
-                      <span className="text-[10px] text-brand-silver-dim flex items-center gap-1">
-                        <Users size={10} />{book._count.purchases} طالب
+                  <div className="p-6">
+                    {book.category && (
+                      <span className="text-[11px] text-brand-royal-light font-tajawal font-bold">
+                        {book.category}
+                      </span>
+                    )}
+                    <h3 className="font-tajawal font-bold text-brand-white mt-1 mb-2 group-hover:text-brand-royal-light transition-colors line-clamp-1">
+                      {book.title}
+                    </h3>
+                    <p className="text-sm text-brand-white/50 font-tajawal line-clamp-2 mb-4">
+                      {book.description}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-brand-white/40 font-tajawal">
+                      <span className="flex items-center gap-1">
+                        <User2 className="w-3 h-3" /> {book.author}
+                      </span>
+                      <span className="text-brand-royal-light font-tajawal font-black text-base">
+                        {book.price > 0 ? `${book.price} ₪` : 'مجاني'}
                       </span>
                     </div>
                   </div>
